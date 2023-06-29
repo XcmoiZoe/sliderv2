@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>slider</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+<style>
+    .container {
+    margin-top:200px;
+    
+    }
+     .slider {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 800px;
+        background: #dadada;
+        height: 0.5rem;
+        outline: none;
+        opacity: 0.7;
+        -webkit-transition: 0.2s;
+        transition: opacity 0.2s;
+        border-radius: 10px;
+        box-shadow: 1px 1px 5px #888888;
+      }
+      .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 30px;
+        height: 30px;
+        background: linear-gradient(90deg, #c653fb 0%, #f63eed 100%);
+        cursor: pointer;
+        border-radius: 100%;
+        position: relative;
+      }
+      .slider-output {
+        position: absolute;
+        width: 8.9rem;
+        height: 3rem;
+        background: linear-gradient(white, white) padding-box,
+          linear-gradient(to bottom, #c156fd, #fe3aeb) border-box;
+        border-radius: 6px;
+        border: 2px solid transparent;
+        top: -70px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #787878;
+        left: -2.5rem;
+        font-size: 14px;
+      }
+
+      .slider-output::before {
+        content: "";
+        display: block;
+        width: 1.7rem;
+        height: 2rem;
+        position: absolute;
+        margin-inline: auto;
+        left: 0;
+        right: 0;
+        bottom: -2rem;
+        clip-path: polygon(100% 0, 0 0, 50% 48%);
+        background: #fe3aeb;
+      }
+
+      .slider-output::after {
+        content: "";
+        display: block;
+        width: 1.7rem;
+        height: 2rem;
+        position: absolute;
+        margin-inline: auto;
+        left: 0;
+        right: 0;
+        bottom: -1.8rem;
+        clip-path: polygon(100% 0, 0 0, 50% 48%);
+        background: white;
+      }
+      .input-wrapper {
+        position: relative;
+    
+      }
+</style>
+</head>
+  <body>
+
+    <div class="container">
+      <div class="row">
+    <div class="col-sm-8 input-wrapper">  
+        
+        <input type="range" min="100" max="1000000" value="100" class="slider"  id="slider" >
+        <div class="slider-output" id="sliderOutput">
+            <p id="slider-text">
+                100 Followers
+            </p>
+        </div></div>
+    <div class="col-sm-4 wrapper">
+        <p>Follower(s)</p>
+        <input type="number" class="follower-input" placeholder="Followers" required id="follower-input" min="100"
+        max="1000000" value="100"></div>
+  </div>
+  <div class="row usd-wrapper-outer">
+    <div class="col-sm"></div>
+    <div class="col-sm"> <div class="usd-wrapper-inner">
+        <p class="usd" id="usd">$ 8</p>
+        <p class="month">/month</p>
+    </div></div>
+    <div class="col-sm"></div>
+  </div>
+    </div>
+    
+       
+
+         
+
+        </div>
+    </div>
+
+    <script>
+        var range = document.getElementById("slider");
+        var bubble = document.getElementById("sliderOutput");
+        var usd = document.getElementById("usd");
+        var followerInput = document.getElementById("follower-input");
+  
+        range.addEventListener("input", () => {
+          setBubble(range.value, bubble);
+          followerInput.value = range.value;
+        });
+  
+        followerInput.addEventListener("input", () => {
+          console.log(followerInput.value);
+  
+          // ADDING LIMITATIONS TO INPUT
+          if (followerInput.value <= 100) {
+            setBubble(100, bubble);
+            range.value = 100;
+          } else if (followerInput.value >= 1000000) {
+            setBubble(1000000, bubble);
+            followerInput.value = 1000000;
+  
+            range.value = 1000000;
+          } else if (followerInput.value === "") {
+            setBubble(100, bubble);
+            range.value = followerInput.value;
+          } else {
+            setBubble(followerInput.value, bubble);
+            range.value = followerInput.value;
+          }
+        });
+  
+        // FUNCTION TO ADD COMMAS TO NUMBERS
+        function numberWithCommas(x) {
+          return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+  
+        function setBubble(range, bubble) {
+          var followers = range;
+          var min = range.min ? range.min : 100;
+          var max = range.max ? range.max : 1000000;
+          var newVal = Number(((followers - min) * 100) / (max - min));
+  
+          var monthly = Math.trunc(followers * 0.004 * 20); // MONTHLY VALUE
+          usd.innerHTML = `$ ${numberWithCommas(monthly)}`; // CHANGING HTML VALUE
+          bubble.innerHTML = `${numberWithCommas(followers)} Followers`; // CHANGING BUBBLE INDICATOR VALUE
+  
+          // Sorta magic numbers based on size of the native UI thumb
+          bubble.style.left = `calc(${newVal}% + (${-56 - newVal * 0.33}px))`;
+        }
+      </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+  </body>
+</html>
